@@ -1,0 +1,57 @@
+.player-card-marker-buttons {
+  background-color: rgba(6, 6, 6, 0.6);
+  border-radius: 20px;
+  padding: 3px;
+  margin-bottom: -10px;
+  border-color: rgba(6, 6, 6, 0.6);
+  border-style: solid;
+  border-width: 1px;
+}
+
+.popup-marker-buttons {
+  background-color: rgba(241, 241, 241, 0.05);
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.mark-good svg{
+  color: rgba(6, 6, 6, 0);
+  stroke: white; 
+}
+
+.mark-bad svg{
+  color: rgba(6, 6, 6, 0);
+  stroke: white; 
+}
+
+.mark-good.active svg {
+  color: #a0f3a0;
+  stroke: none;
+}
+
+.mark-bad.active svg {
+  color: #f3a0a0;
+  stroke: none;
+}
+
+.popup-marker-buttons button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.popup-marker-buttons button:hover {
+  transform: scale(1.2);
+}
+
+.player-card-marker-buttons button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.player-card-marker-buttons button:hover {
+  transform: scale(1.2);
+}
