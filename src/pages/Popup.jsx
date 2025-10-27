@@ -31,7 +31,7 @@ export function PlayerList({ type }) {
       for (const key of allKeys) {
         const data = await Storage.get(key);
         const name = key
-        const status = data?.[name];
+        const status = data?.[name].type;
         if (status === type) {
           axios.get(
             `https://www.faceit.com/api/users/v1/nicknames/${name}`

@@ -55,3 +55,12 @@
 .player-card-marker-buttons button:hover {
   transform: scale(1.2);
 }
+
+.popup-textbox {
+    resize: none;
+    background-color: rgba(241, 241, 241, 0.05);
+    border-radius: 4px;
+    padding: 8px;
+    outline: none;
+    color: white;
+}

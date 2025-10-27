@@ -34,6 +34,13 @@ function createButton(type, size = 24) {
   return btn;
 }
 
+function createTextBox() {
+  const textbox = document.createElement('textarea')
+  textbox.className = "popup-textbox"
+  textbox.placeholder = "Describe player..."
+  return textbox;
+}
+
 function createButtonContainer(name, size = 24, wrapperClass = 'player-card-marker-buttons') {
   const container = document.createElement('div');
   container.className = wrapperClass;
@@ -44,26 +51,56 @@ function createButtonContainer(name, size = 24, wrapperClass = 'player-card-mark
 
 async function loadAndApplyState(name, goodBtn, badBtn, container) {
   const data = await Storage.get(name);
+  if (!data[name]) return;
+
   const value = data[name];
 
-  if (value === 'good') {
+  if (value.type === 'good') {
     goodBtn.classList.add('active');
     if (container) container.style.borderColor = COLORS.good;
-  } else if (value === 'bad') {
+  } else if (value.type === 'bad') {
     badBtn.classList.add('active');
     if (container) container.style.borderColor = COLORS.bad;
   }
 }
 
+async function loadTextOnTextbox(name, textbox) {
+  const data = await Storage.get(name);
+  if (!data[name]) return;
+
+  const value = data[name];
+  textbox.value = value.desc
+}
+
 function handleButtonClick(name, type) {
   return async () => {
     const data = await Storage.get(name);
-    if (data && data[name] === type) {
-      Storage.remove(name);
-    } else {
-      Storage.set({ [name]: type });
+    // if dataset exist
+    if (data[name]) {
+      // if type is same than expected type
+      if (data[name].type === type) {
+        Storage.remove(name);
+      } else if (data) {
+          Storage.modify(name, "type", type)
+      } 
+    }
+    else {
+      Storage.set({ [name]: {"name": name, "type": type, "desc": ""} });
     }
   };
+}
+
+
+async function handleTextbox(event, name) {
+    const text = event.target.value
+    const data = await Storage.get(name)
+    // if exist on storage
+    console.log(data)
+    if (data[name]) {
+      Storage.modify(name, "desc", text)
+    } else {
+      Storage.set({ [name]: {"name": name, "type": null, "desc": text} });
+    }
 }
 
 // ================================
@@ -79,14 +116,19 @@ function observePopup() {
     if (!statsElem || !nameElem) return;
 
     const name = nameElem.textContent.trim();
+    const textbox = createTextBox()
+    statsElem.parentNode.insertBefore(textbox, statsElem);
+
     const container = createButtonContainer(name, 24, 'popup-marker-buttons');
-    statsElem.parentNode.insertBefore(container, statsElem);
+    textbox.parentNode.insertBefore(container, textbox);
 
     const goodBtn = container.querySelector('.mark-good');
     const badBtn = container.querySelector('.mark-bad');
 
+    await loadTextOnTextbox(name, textbox)
     await loadAndApplyState(name, goodBtn, badBtn);
 
+    textbox.addEventListener("change", (event) => handleTextbox(event, name))
     goodBtn.addEventListener('click', handleButtonClick(name, 'good'));
     badBtn.addEventListener('click', handleButtonClick(name, 'bad'));
   });
@@ -126,6 +168,7 @@ function observePlayerCards() {
 // Storage Change Handler
 // ================================
 function updateButtons(changes) {
+  console.log(changes)
   const name = Object.keys(changes)[0];
   const { newValue, oldValue } = changes[name];
 
@@ -137,17 +180,21 @@ function updateButtons(changes) {
     const badBtn = container.querySelector('.mark-bad');
 
     const setState = (value) => {
-      goodBtn.classList.toggle('active', value === 'good');
-      badBtn.classList.toggle('active', value === 'bad');
+      goodBtn.classList.toggle('active', value?.type === 'good');
+      badBtn.classList.toggle('active', value?.type === 'bad');
       if (container.classList.contains('player-card-marker-buttons')) {
         container.style.borderColor =
-          value === 'good' ? COLORS.good :
-          value === 'bad' ? COLORS.bad : COLORS.neutral;
+          value?.type === 'good' ? COLORS.good :
+          value?.type === 'bad' ? COLORS.bad : COLORS.neutral;
       }
     };
 
-    if (!newValue && oldValue) setState(null);
-    else if (newValue) setState(newValue);
+    if (!newValue || typeof newValue !== 'object' || !newValue.type) {
+      setState(null);
+    }  else {
+      setState(newValue);
+    }
+
   });
 }
 
