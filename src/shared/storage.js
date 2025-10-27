@@ -20,6 +20,27 @@ export const Storage = {
     });
   },
 
+  async modify(key, modifiedItem, value) {
+    console.log(`key: ${key} value: ${value} modifiedItem: ${modifiedItem}`)
+    chrome.storage.sync.get(key, (data) => {
+      let values = data[key] || {};
+      switch (modifiedItem) {
+        case ("name"):
+          values.name = value
+          break;
+        case ("type"):
+          values.type = value
+          break;
+        case ("desc"):
+          values.desc = value
+          break;
+      }      
+      return new Promise((resolve) => {
+        chrome.storage.sync.set({ [key]: values }, () => resolve());
+      });
+    });
+  },
+
   async getAllKeys() {
     return new Promise((resolve) => {
       const list = []
