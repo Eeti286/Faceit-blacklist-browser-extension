@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Faceit Player Blacklist",
-  "version": "2.0",
+  "version": "2.0.0",
   "description": "Mark Faceit players as good or bad.",
   "permissions": ["storage", "activeTab", "scripting"],
   "icons": {
-    "16": "icon/128.png",
-    "48": "icon/128.png",
-    "128": "icon/128.png"
+    "16": "icon/icon16.png",
+    "48": "icon/icon48.png",
+    "128": "icon/icon128.png"
   },
   "content_scripts": [
     {
