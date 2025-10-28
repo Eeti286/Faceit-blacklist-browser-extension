@@ -1,10 +1,162 @@
-body {
+body, html {
     background-color: rgb(14, 14, 14);
-    min-width: 400px;
-    text-align: center;
+    width: 600px; 
+    height: 500px; 
+    overflow-y: auto; 
+    overflow-x: hidden; 
     color: whitesmoke;
     justify-content: center;
     font-family: "Inter";
+    margin: 0px;
+    padding: 0px;
+}
+
+
+.full-continer {
+    display: flex;
+}
+
+/* #########
+Scrollbar
+######### */
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: rgb(28, 28, 28);
+}
+
+/* #########
+Sidebar
+######### */
+
+.sidebar-container {
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    background-color: rgb(28, 28, 28);
+}
+
+.header-wrap {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-img {
+    width: 32px;
+    height: 32px;
+}
+
+.header-text {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.nav-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-top: 50px;
+    justify-content: center;
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.standing-wrap p {
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+}
+
+.standig-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.standig-nav a {
+    width: 100%;
+    padding: 10px 0px 10px 10px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.standig-nav a:hover {
+    background-color: rgb(22, 22, 22);
+    border-radius: 8px;
+}
+
+.standig-nav .active {
+    background-color: rgb(22, 22, 22);
+    border-radius: 8px;
+}
+
+.options-wrap p {
+    font-size: 12px;
+    color: rgb(200, 200, 200);
+}
+
+.option-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.option-nav a {
+    width: 100%;
+    padding: 10px 0px 10px 10px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.option-nav a:hover {
+    background-color: rgb(22, 22, 22);
+    border-radius: 8px;
+}
+
+.option-nav .active {
+    background-color: rgb(22, 22, 22);
+    border-radius: 8px;
+}
+
+.app-version-info {
+    color: rgb(200, 200, 200);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 15px;
+    font-style: italic;
+}
+
+/* #########
+Content
+######### */
+
+.content-container {
+    width: 400px;
+    margin-left: 200px;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.nav-indicator {
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    color: rgb(200, 200, 200);
+}
+
+.nav-indicator-active {
+    color: rgb(255, 255, 255);
 }
 
 .hr-line {
@@ -68,13 +220,12 @@ button:hover {
 .avata-container {
     border-radius: 10px;
     height: 100%;
-    width: fit-content;
 }
 
 .avata-container img {
     border-radius: 10px;
-    width: 100%;
     height: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
 }
 

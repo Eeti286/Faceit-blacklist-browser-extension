@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
 import { Storage } from '../shared/storage';
 import "./popupStyle.css";
-import axios from 'axios';
+import { useEffect, useState } from "react";
 
 
 export function PlayerList({ type }) {
   const [itemList, setItemList] = useState([]);
   const [imgDict, setImgDict] = useState({})
+  const placeholdeImgPath = "../img/placeholder-image.png"
 
   const updateList = (changes) => {
       const name = Object.keys(changes)[0];
@@ -19,30 +18,29 @@ export function PlayerList({ type }) {
   }
 
   const addImage = (id, url) => {
-    setImgDict(prev => ({
-      ...prev,
-      [id]: url
-    }));
+    setImgDict(prev => ({...prev,[id]: url}));
   };
 
   useEffect(() => {
     async function loadData() {
       const allKeys = await Storage.getAllKeys();
+
       for (const key of allKeys) {
         const data = await Storage.get(key);
+
         const name = key
         const status = data?.[name].type;
+        const img = data?.[name].img;
+
         if (status === type) {
-          axios.get(
-            `https://www.faceit.com/api/users/v1/nicknames/${name}`
-          ).then((res) => addImage(name, res.data.payload.avatar));
-          
-          setItemList(prev => [...prev, name]);
+          addImage(name, (img.length != 0 ? img : placeholdeImgPath));
+          setItemList((prev) => [...prev, name]);
         }
       }
     }
 
     loadData();
+
   }, []);
 
   Storage.onChange(updateList);
@@ -53,7 +51,7 @@ export function PlayerList({ type }) {
         <div className='list-elem' key={index}>
           <div className='info-container'>
             <div className='avata-container'>
-              <img src={imgDict[item]} />
+              <img src={imgDict[item] ? imgDict[item] : placeholdeImgPath } />
             </div>
             <p>{item}</p>
           </div>
@@ -66,28 +64,106 @@ export function PlayerList({ type }) {
   );
 }
 
-
-export default function() {
-
+export function NavListIndicator({tab, category}) {
   return (
-    <div>
-      <h1>Faceit Standing Status</h1> 
-      <hr className="hr-line neutral" />
+    <div className='nav-indicator'>
+      <p>{category}</p>
+      <p>&#62;</p>
+      <p className='nav-indicator-active'>{tab}</p>
+    </div>
+  )
+}
+
+export function BadPlayerTab() {
+  return (
+    <>
       <div className="container">
           <div className="bad-standing-list-container">
-              <h2>Bad Standing</h2>
-              <hr className="hr-line bad" />
+              <h2>Bad Player</h2>
               <div id="bad-standing-list">
                 <PlayerList type={"bad"} />
               </div>
           </div>
+      </div>
+    </>
+  )
+}
+
+export function GoodPlayerTab() {
+  return (
+    <>
+      <div className="container">
           <div className="good-standing-list-container">
-              <h2>Good Standing</h2>
-              <hr className="hr-line good" />
+              <h2>Good Player</h2>
               <div id="good-standing-list">
                 <PlayerList type={"good"}/>
               </div>
           </div>
+      </div>
+    </>
+  )
+}
+
+export function OptionsGenrealTab() {
+  return (
+    <>
+      <div className="container">
+        <h2>Genreal</h2>
+      </div>
+    </>
+  )
+}
+
+
+
+export default function() {
+  const [tab, setTab] = useState("Bad Player")
+  const [tabCategory, setTabCategory] = useState("Standing")
+  const version = chrome.runtime.getManifest().version
+
+  const tabHandling = (tab, category) => {
+    setTab(tab)
+    setTabCategory(category)
+  }
+
+  const renderContent = () => {
+    switch (tab) {
+      case "Bad Player": return <div><BadPlayerTab /></div>;
+      case "Good Player": return <div><GoodPlayerTab /></div>;
+      case "General": return <div><OptionsGenrealTab /></div>;
+      default: return null;
+    }
+  };
+
+  return (
+    <div className='full-continer'>
+      <div className='sidebar-container'>
+        <div className='header-wrap'>
+          <img className='header-img' src='../icon/icon48.png'></img>
+          <p className='header-text'>BLACKLIST</p>
+        </div>
+        <div className='nav-list-container'>
+          <div className='standing-wrap'>
+            <p>Standing</p>
+            <nav className='standig-nav'>
+              <a className={tab === "Bad Player" ? "active" : ""} onClick={() => tabHandling("Bad Player", "Standing")}>Bad Player</a>
+              <a className={tab === "Good Player" ? "active" : ""} onClick={() => tabHandling("Good Player", "Standing")}>Good Player</a>
+            </nav>
+          </div>
+          <div className='options-wrap'>
+            <p>Options</p>
+            <nav className='option-nav'>
+              <a className={tab === "General" ? "active" : ""} onClick={() => tabHandling("General", "Options")}>General</a>
+            </nav>
+          </div>
+        </div>
+        <div className='app-version-info'>
+          <p>Version: {version}</p>
+        </div>
+      </div>
+      <div className='content-container'>
+        <NavListIndicator tab={tab} category={tabCategory}/>
+        {renderContent()}
       </div>
     </div>
   )

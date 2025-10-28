@@ -72,6 +72,19 @@ async function loadTextOnTextbox(name, textbox) {
   textbox.value = value.desc
 }
 
+const getAvatarImg = async (name) => {
+  try {
+    const response = await fetch(`https://www.faceit.com/api/users/v1/nicknames/${name}`);
+    const data = await response.json();
+    const url = data.payload.avatar;
+    if (!url) return "";
+    return data.payload.avatar; 
+  } catch (error) {
+    console.error("Error fetching avatar:", error);
+    return null;
+  }
+};
+
 function handleButtonClick(name, type) {
   return async () => {
     const data = await Storage.get(name);
@@ -85,7 +98,8 @@ function handleButtonClick(name, type) {
       } 
     }
     else {
-      Storage.set({ [name]: {"name": name, "type": type, "desc": ""} });
+      const imgPath = await getAvatarImg(name);
+      Storage.set({ [name]: {"name": name, "type": type, "desc": "", "img": imgPath} });
     }
   };
 }
@@ -99,7 +113,8 @@ async function handleTextbox(event, name) {
     if (data[name]) {
       Storage.modify(name, "desc", text)
     } else {
-      Storage.set({ [name]: {"name": name, "type": null, "desc": text} });
+      const imgPath = await getAvatarImg(name);
+      Storage.set({ [name]: {"name": name, "type": null, "desc": text, "img": imgPath} });
     }
 }
 
