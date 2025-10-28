@@ -40,6 +40,10 @@
 
 <code>With this extension user can mark players as bad or good in Faceit.com</code>
 
+![Extension Popup Window](./img/img-show-extension-popup.png)
+![Popup](./img/img-show-popup.png)
+![Party Showcase](./img/img-show-party.png)
+
 ---
 
 
